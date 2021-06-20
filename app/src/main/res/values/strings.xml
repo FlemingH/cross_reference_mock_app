@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">cross_reference_mock_app</string>
+    <string name="cr_push">CR PUSH</string>
 </resources>
