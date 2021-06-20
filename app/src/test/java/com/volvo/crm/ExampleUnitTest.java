@@ -10,8 +10,12 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    private MockTxtController mockTxtController = new MockTxtController();
+
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void test_get_mock_txt() {
+        String mockTxt = mockTxtController.getMockTxt();
+        System.out.println(mockTxt);
     }
 }

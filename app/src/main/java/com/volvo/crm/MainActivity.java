@@ -2,18 +2,25 @@ package com.volvo.crm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.volvo.crs.IMyAidlInterface;
 
 public class MainActivity extends AppCompatActivity {
+
+    private MockTxtController mockTxtController = new MockTxtController();
 
     private String TAG = "client";
 
@@ -85,5 +92,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button getMockButton = findViewById(R.id.button2);
+
+        getMockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(runnable).start();
+            }
+        });
     }
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle data = msg.getData();
+            String mockTxt = data.getString("value");
+            TextView mockJsonView = findViewById(R.id.mockJsonView);
+            mockJsonView.setText(mockTxt);
+        }
+    };
+
+    Runnable runnable = new Runnable(){
+        @Override
+        public void run() {
+            // TODO: http request.
+            Message msg = new Message();
+            Bundle data = new Bundle();
+            String mockTxt = mockTxtController.getMockTxt();
+            data.putString("value", mockTxt);
+            msg.setData(data);
+            handler.sendMessage(msg);
+        }
+    };
 }

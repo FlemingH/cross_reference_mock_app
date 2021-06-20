@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">cross_reference_mock_app</string>
     <string name="cr_push">CR PUSH</string>
+    <string name="scan_loaded_routes">Scan loaded routes</string>
 </resources>
