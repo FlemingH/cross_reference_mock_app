@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            iMyAidlInterface.add(1, 2);
+            iMyAidlInterface.push("testJson");
         } catch (RemoteException e) {
             Log.e(TAG, "aidlPush RemoteException");
             e.printStackTrace();
