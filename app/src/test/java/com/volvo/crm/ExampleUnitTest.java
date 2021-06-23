@@ -2,8 +2,6 @@ package com.volvo.crm;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
@@ -11,11 +9,11 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
 
-    private MockTxtController mockTxtController = new MockTxtController();
+    private MockController mockController = new MockController();
 
     @Test
     public void test_get_mock_txt() {
-        String mockTxt = mockTxtController.getMockTxt();
+        String mockTxt = mockController.getMockList();
         System.out.println(mockTxt);
     }
 }

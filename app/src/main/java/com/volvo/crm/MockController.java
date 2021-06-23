@@ -7,13 +7,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MockTxtController {
+public class MockController {
 
     private static OkHttpClient client = new OkHttpClient();
 
-    public String getMockTxt() {
+    public String getMockList() {
 
-        String urlTemplate = "https://02rpybvh39.execute-api.ap-east-1.amazonaws.com/default/lambda-get-s3-mock-txt";
+        String urlTemplate = "https://piut7crwt6.execute-api.ap-east-1.amazonaws.com/default/lambda-get-s3-mock-list";
         Request request = new Request.Builder().url(urlTemplate).get().build();
 
         Call call = client.newCall(request);

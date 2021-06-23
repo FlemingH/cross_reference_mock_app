@@ -20,7 +20,7 @@ import com.volvo.crs.IMyAidlInterface;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MockTxtController mockTxtController = new MockTxtController();
+    private MockController mockTxtController = new MockController();
 
     private String TAG = "client";
 
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             // TODO: http request.
             Message msg = new Message();
             Bundle data = new Bundle();
-            String mockTxt = mockTxtController.getMockTxt();
+            String mockTxt = mockTxtController.getMockList();
             data.putString("value", mockTxt);
             msg.setData(data);
             handler.sendMessage(msg);
