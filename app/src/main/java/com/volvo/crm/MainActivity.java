@@ -20,13 +20,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.volvo.crs.IMyAidlInterface;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private MockController mockTxtController = new MockController();
+    private Gson gson = new Gson();
 
     private AlertDialog alertDialog;
+    private String[] mockItems;
+    private String curMockKey;
 
     private String TAG = "client";
 
@@ -116,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String mockTxt = data.getString("value");
+
+            ArrayList mockList = gson.fromJson(mockTxt, ArrayList.class);
+            mockItems = (String[]) mockList.toArray(new String[0]);
+
             TextView mockJsonView = findViewById(R.id.mockJsonView);
             mockJsonView.setText(mockTxt);
         }
@@ -142,19 +152,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSingleAlertDialog(View view) {
-        final String[] items = {"单选1", "单选2", "单选3", "单选4"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("Select mock file");
-        alertBuilder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        alertBuilder.setSingleChoiceItems(mockItems, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(MainActivity.this, items[i], Toast.LENGTH_SHORT).show();
+                curMockKey = mockItems[i];
+                Toast.makeText(MainActivity.this, mockItems[i], Toast.LENGTH_SHORT).show();
             }
         });
 
             alertBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+                TextView curJsonView = findViewById(R.id.curJsonView);
+                curJsonView.setText(String.format("Selected: %s", curMockKey));
+
                 alertDialog.dismiss();
             }
         });
