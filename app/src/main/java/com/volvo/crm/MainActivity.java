@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.volvo.crs.IMyAidlInterface;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog alertDialog;
     private String[] mockItems;
-    private String curMockKey;
+    private String curMockKey = "";
 
     private String TAG = "client";
 
@@ -67,16 +70,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // 按钮点击事件
-    public void aidlPush(View view) {
+    // push按钮点击事件
+    public void aidlPush() {
 
         if (!mBound) {
             attemptToBindService();
             return;
         }
 
+        if (curMockKey.equals("")) {
+            new Thread(){
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "Please select a mock file", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            }.start();
+            return;
+        }
+
+        String mockTxt = mockTxtController.getMockTxt(curMockKey);
+
+        if (mockTxt.equals("")) {
+            new Thread(){
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "Mock file null", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            }.start();
+            return;
+        }
+
         try {
-            iMyAidlInterface.push("testJson");
+            iMyAidlInterface.push(mockTxt);
         } catch (RemoteException e) {
             Log.e(TAG, "aidlPush RemoteException");
             e.printStackTrace();
@@ -106,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button getMockButton = findViewById(R.id.button2);
+        Button pushButton = findViewById(R.id.button);
 
         getMockButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,12 +143,19 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(runnable).start();
             }
         });
+
+        pushButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(runnablePush).start();
+            }
+        });
     }
 
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler(){
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(@NotNull Message msg) {
             super.handleMessage(msg);
             Bundle data = msg.getData();
             String mockTxt = data.getString("value");
@@ -134,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
     Runnable runnable = new Runnable(){
         @Override
         public void run() {
-            // TODO: http request.
             Message msg = new Message();
             Bundle data = new Bundle();
             String mockTxt = mockTxtController.getMockList();
@@ -144,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    Runnable runnablePush = new Runnable(){
+        @Override
+        public void run() {
+            aidlPush();
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
