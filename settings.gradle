@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':crprotobuf'
 rootProject.name='cross_reference_mock_app'
