@@ -3,4 +3,5 @@
     <string name="cr_push">CR PUSH</string>
     <string name="scan_loaded_routes">Scan loaded routes</string>
     <string name="show_list">SHOW LIST</string>
+    <string name="push_lib_route">Push route by lib</string>
 </resources>

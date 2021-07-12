@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.volvo.crs.IMyAidlInterface;
+import com.volvocars.crprotobuf.HdRoute;
+import com.volvocars.crprotobuf.VccServicePusher;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -136,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button getMockButton = findViewById(R.id.button2);
         Button pushButton = findViewById(R.id.button);
+        Button pushLibButton = findViewById(R.id.button4);
 
         getMockButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +151,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new Thread(runnablePush).start();
+            }
+        });
+
+        pushLibButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                HdRoute.NavigationRoute navigationRoute = HdRoute.NavigationRoute.newBuilder().setLength(1).setLinknumber(1).addLinks(
+                        HdRoute.Links.newBuilder().setLength(1).setLevel(1).setUsage(1).setNum(1).addLinkpt(
+                                HdRoute.Linkpt.newBuilder().setLat(1).setLon(1)
+                        ).addLinkpt(
+                                HdRoute.Linkpt.newBuilder().setLat(2).setLon(2)
+                        )
+                ).build();
+                VccServicePusher.push(getApplicationContext(), navigationRoute);
             }
         });
     }
